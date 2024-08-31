@@ -35,20 +35,21 @@ router.post("/", async(req,res)=>{
     }
 });
 
-//update a post
-router.patch("/:id", getPost, async(req,res)=>{
-    if(req.body.title !=null){
+// Update a post
+router.patch("/:id", getPost, async (req, res) => {
+    // Check if the title is provided and update it
+    if (req.body.title != null) {
         res.post.title = req.body.title;
     }
-    if(req.body.content !=null){
+    // Check if the content is provided and update it
+    if (req.body.content != null) {
         res.post.content = req.body.content;
     }
-
-    try{
-        const updatedPost = await res.post.save();
-        res.json(updatedPost);
-    }catch(err){
-        res.status(400).json({message:err.message});
+    try {
+        const updatedPost = await res.post.save();  // Save the updated post to the database
+        res.json(updatedPost);                      // Return the updated post in the response
+    } catch (err) {
+        res.status(400).json({ message: err.message });  // Return a 400 error if saving fails
     }
 });
 
@@ -62,17 +63,17 @@ router.delete("/:id", getPost, async(req,res)=>{
     }
 });
 
-//function to get post id
-async function getPost(req, res, next){
+// Middleware function to get post by ID
+async function getPost(req, res, next) {
     let post;
-    try{
-        post=await Post.findById(req.params.id);
-        if(post == null)
-            return res.status(404).json({message: "Cannot find post"});
-    }catch(err){
-        return res.status(500).json({message: err.message});
+    try {
+        post = await Post.findById(req.params.id);
+        if (post == null) {
+            return res.status(404).json({ message: "Cannot find post" });
+        }
+    } catch (err) {
+        return res.status(500).json({ message: err.message });
     }
-
     res.post = post;
     next();
 }
