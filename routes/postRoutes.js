@@ -53,15 +53,17 @@ router.patch("/:id", getPost, async (req, res) => {
     }
 });
 
-//delete a post
-router.delete("/:id", getPost, async(req,res)=>{
-    try{
-        await res.post.remove();
-        res.json({message: "Post deleted"});
-    }catch(err){
-        res.status(500).json({message:err.message});
+//delete post
+router.delete('/:id', async (req, res) => {
+    try {
+      const post = await Post.findByIdAndDelete(req.params.id);
+      if (!post) return res.status(404).send('Post not found');
+      res.status(200).send('Post deleted');
+    } catch (error) {
+      res.status(500).send('Error deleting post');
     }
-});
+  });
+  
 
 // Middleware function to get post by ID
 async function getPost(req, res, next) {

@@ -18,6 +18,14 @@ function Posts(){
         fetchPosts();
     },[]);
 
+    const deletePost = async (id) => {
+        try{
+            await api.delete(`/${id}`);
+            setPosts(posts.filter(post => post._id !== id));
+        }catch(err){
+            console.error("Error deleting post: ", err);
+        }
+    };
     return(
         <div>
             <h1>Blog Posts</h1>
@@ -31,6 +39,7 @@ function Posts(){
                         <Link to={`/update-post/${post._id}`}>
                             <button>Edit Post</button>
                         </Link>
+                        <button onClick={()=>deletePost(post._id)}>Delete Post</button>
                     </div>
                     ))
                 ) : (
